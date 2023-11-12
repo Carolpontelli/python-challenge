@@ -1,0 +1,20 @@
+
+    Python-challenge/PyPoll      
+n\    Election Results             
+
+ Total Votes : 369711
+
+
+ Charles Casper Stockham : 0.0%   (0)
+
+
+ Diana DeGette : 0.0%   (1)
+
+
+ Raymon Anthony Doane : 0.001%   (2)
+
+----------------------------------------------------------------------
+
+ Winner : winner
+
+----------------------------------------------------------------------
