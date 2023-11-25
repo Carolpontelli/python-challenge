@@ -1,7 +1,5 @@
 # Python-challenge/PyPoll
-
 # import libraries
-import os
 import csv
 
 #variable declarations and starting values
@@ -10,95 +8,54 @@ votesTotal=0
 
 csvData=[]
 # reading csv file
-filename="C:/Users/anaca/Documents/python-challenge/PyPoll/Resources/election_data.csv" 
+filename="Resources/election_data.csv"
 with open(filename, mode='r') as csvFile:
-# creating a csv reader object
+    #creating a csv reader
     csvReader = csv.reader(csvFile)
     for row in csvReader:
         # print(row)
         rowCount += 1
         csvData.append(row)
-votesTotal=rowCount-1                   # total votes are equal to rowCount-1, -1 because of title row
+votesTotal=rowCount-1
 
-# collect candidates names only, in another list
-candidates=[]
-for c in range(rowCount):
-    candidates.append(csvData[c][2])    # index [2] which is col 3, is candidate names.
+# collect candidates names in another list
+candidatesTotal={}
 
-# function for collect items, one at a time in a given list
-unique_list = []                        # declare variable for a list
-def unique():
-    for x in candidates:
-        # check if exists in unique_list or not
-        if x not in unique_list:
-            if (x!='Candidate'):        # not to include column title 'Candidate'
-                unique_list.append(x)   # unique list now have candidate names, if new names added to election_data.csv, 
-                                        # candidata to be listed in unique_list
-unique()                                # calling function to run, as functions are not running unless called
+for c in range(1, rowCount):
+    name = csvData[c][2]
 
-namesForCandidate=[]
-votesForCandidate=[]
-votesPercentForCandidate=[]
+    if name not in candidatesTotal:
+        candidatesTotal[name] = 0
 
-for cand in range(len(unique_list)):                # iteration for each candidate
-    cnt=0
-    for vote in range(rowCount):
-        if(unique_list[cand]==csvData[vote][2]):
-            cnt += 1                                # vote count for each candidate
-    votesForCandidate.append(cnt)                   # list item create for each candidate number of votes
-    votesPercentForCandidate.append(cnt)            # list item create for each candidate percentage of votes
+    candidatesTotal[name] = candidatesTotal[name] + 1
 
-# votesPercent values
-for i in range(len(unique_list)):
-    votesPercentForCandidate[i] = round(100*votesForCandidate[i] / votesTotal, 3)     # percent calc for each candidate  
+OutputStr = "Python-challenge/PyPoll\n"
+OutputStr += "\n"
+OutputStr += "Election Results:\n"
+OutputStr += "\n"
+OutputStr += "Total Votes : " + str(votesTotal) + "\n"
+OutputStr += "\n"
 
-# find the candidate got max votes
-maxVotes = max(votesForCandidate)
-for i in range(len(unique_list)):
-    if(maxVotes==votesForCandidate[i]):
-        winner=unique_list[i]
+for name, total in candidatesTotal.items():
+    percentile = round(100 * total / votesTotal, len(candidatesTotal))
+    OutputStr += str(name) + " : " + str(percentile) +"%  ("+ str(total) +")\n"
 
-# Output Results,
-# write all output to a string, then this string to be send to: 
-# 1) print to terminal and 
-# 2) export to a text file
+winner = max(candidatesTotal, key=candidatesTotal.get)
 
-# title
-outputStr = ""
-outputStr += ""
-outputStr += "\n"
-outputStr += "\n"
-outputStr += "\n"
-outputStr += "\n"
-outputStr += "\n"
-outputStr += "\n----------------------------------------------------------------------"
-outputStr += "\n                        Election Results                              "
-outputStr += "\n----------------------------------------------------------------------"
-
-# total votes
-outputStr += "\n"
-outputStr += "\n Total Votes  : " + str(votesTotal)
-outputStr += "\n"
-
-# candidates, repeated for each candidate, if any candidate added to election_data.csv it will be showed up here in the results.
-# you can add "123456,Toronto" at the end of csv file and you will see one more candidate with 1 vote, in the results
-for i in range(len(unique_list)):
-    outputStr += "\n"
-    outputStr += "\n " + str(unique_list[i]) + " : " + str(votesPercentForCandidate[i]) +"%   ("+ str(votesForCandidate[i]) +")"
-    outputStr += "\n"
+if winner is None:
+    winner = ""
 
 # winner
-outputStr += "\n----------------------------------------------------------------------"
-outputStr += "\n"
-outputStr += "\n Winner : " + str(winner)
-outputStr += "\n"
-outputStr += "\n----------------------------------------------------------------------"
+OutputStr += "\n----------------------------------------------------------------------"
+OutputStr += "\n"
+OutputStr += "\n Winner: " + (winner)
+OutputStr += "\n"
+OutputStr += "\n----------------------------------------------------------------------"
 
 # 1) Output Report to terminal
-print(outputStr)
+print(OutputStr)
 
-# 2) Output Report to a text file
-filename="C:/Users/anaca/Documents/python-challenge/PyPoll/Analysis/Results.txt" 
+#2) Output Report to a text file
+filename="Analysis/Results.txt"
 with open(filename, 'w') as txtFile:
-    txtFile.write(outputStr)
-       
+    txtFile.write(OutputStr)
